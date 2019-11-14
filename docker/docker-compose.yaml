@@ -20,6 +20,15 @@ services:
       - ./../:/var/www/html
     environment:
       HOST: localhost
+      DB_HOST: mysql
+      DB_NAME: test_project
+      DB_USER: user
+      DB_PASSWORD: qwerty123
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 465
+      SMTP_USER: foo
+      SMTP_PASSWORD: bar
+      NEWS_RSS: https://www:tvnet:lv/rss/
     links:
       - mysql
 
