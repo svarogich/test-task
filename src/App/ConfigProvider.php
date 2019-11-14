@@ -35,6 +35,8 @@ class ConfigProvider
             'invokables' => [
             ],
             'factories'  => [
+                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                Models\UserRepository::class => Models\UserRepositoryFactory::class,
             ],
         ];
     }
