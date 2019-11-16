@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Models\UserRepository;
+use App\Services\UserRegistration;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,19 +20,30 @@ class AuthenticationHandler implements RequestHandlerInterface
 {
     private const REDIRECT_ATTRIBUTE = 'authentication:redirect';
 
-    /** @var Router\RouterInterface */
+    /**
+     * @var Router\RouterInterface
+     */
     private $router;
 
-    /** @var null|TemplateRendererInterface */
+    /**
+     * @var null|TemplateRendererInterface
+     */
     private $template;
+
     /**
      * @var PhpSession
      */
     private $adapter;
+
     /**
      * @var UserRepository
      */
     private $userRepository;
+
+    /**
+     * @var UserRegistration
+     */
+    private $userRegistration;
 
     /**
      * AuthenticationHandler constructor.
@@ -39,18 +51,21 @@ class AuthenticationHandler implements RequestHandlerInterface
      * @param TemplateRendererInterface $template
      * @param PhpSession $adapter
      * @param UserRepository $userRepository
+     * @param UserRegistration $userRegistration
      */
     public function __construct(
         Router\RouterInterface $router,
         TemplateRendererInterface $template,
         PhpSession $adapter,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        UserRegistration $userRegistration
     )
     {
         $this->router = $router;
         $this->template = $template;
         $this->adapter = $adapter;
         $this->userRepository = $userRepository;
+        $this->userRegistration = $userRegistration;
     }
 
     /**
@@ -176,10 +191,17 @@ class AuthenticationHandler implements RequestHandlerInterface
 
     private function handleGetRegistration(ServerRequestInterface $request)
     {
-        return new HtmlResponse($this->template->render(
-            'app::registration',
-            []
-        ));
+        // TODO refactor with InputFilter
+        $token = $request->getQueryParams()['token'];
+
+        if ($this->userRegistration->verifyToken($token)) {
+            return new HtmlResponse($this->template->render(
+                'app::registration',
+                ['token' => $token]
+            ));
+        } else {
+            return new HtmlResponse('Page Not Found', 404); //TODO normal....
+        }
     }
 
     private function handleGetPreRegistration(ServerRequestInterface $request)
@@ -194,7 +216,6 @@ class AuthenticationHandler implements RequestHandlerInterface
     {
         // TODO refactor with InputFilter
         $email = $request->getParsedBody()['email'];
-        // TODO check field
 
         $user = $this->userRepository->findByEmail($email);
 
@@ -203,10 +224,29 @@ class AuthenticationHandler implements RequestHandlerInterface
 
     private function handlePostPreRegistration(ServerRequestInterface $request)
     {
-        // TODO refactor with InputFilter
+        // TODO refactor with InputFilter / verify email is email
         $email = $request->getParsedBody()['email'];
-        // TODO check field
 
-        $user = $this->userRepository->findByEmail($email);
+        $application = $this->userRegistration->preRegister($email);
+
+        return new HtmlResponse($this->template->render(
+            'app::pre_registration_mail_send',
+            ['email' => $application->getEmail()]
+        ));
+    }
+
+    private function handlePostRegistration(ServerRequestInterface $request)
+    {
+        // TODO refactor with InputFilter / verify password is valid
+        $token = $request->getParsedBody()['token'];
+        $password = $request->getParsedBody()['password'];
+
+
+        $application = $this->userRegistration->register($token, $password);
+
+        return new HtmlResponse($this->template->render(
+            'app::registration_complete',
+            ['email' => $application->getEmail()]
+        ));
     }
 }

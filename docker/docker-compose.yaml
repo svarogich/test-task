@@ -12,6 +12,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: qwerty123
 
+  smtp:
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
+
   project.fpm:
     build:
       context: ./
@@ -24,13 +29,14 @@ services:
       DB_NAME: test_project
       DB_USER: user
       DB_PASSWORD: qwerty123
-      SMTP_HOST: smtp.gmail.com
-      SMTP_PORT: 465
-      SMTP_USER: foo
-      SMTP_PASSWORD: bar
+      SMTP_HOST: smtp
+      SMTP_PORT: 1025
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
       NEWS_RSS: https://www:tvnet:lv/rss/
     links:
       - mysql
+      - smtp
 
   project.localhost:
     image: nginx:latest

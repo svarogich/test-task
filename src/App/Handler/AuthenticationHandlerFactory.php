@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Models\UserRepository;
+use App\Services\UserRegistration;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Authentication\Session\PhpSession;
@@ -17,7 +18,8 @@ class AuthenticationHandlerFactory
         $template = $container->get(TemplateRendererInterface::class);
         $adapter = $container->get(PhpSession::class);
         $userRepository = $container->get(UserRepository::class);
+        $userRegistration = $container->get(UserRegistration::class);
 
-        return new AuthenticationHandler($router, $template, $adapter, $userRepository);
+        return new AuthenticationHandler($router, $template, $adapter, $userRepository, $userRegistration);
     }
 }

@@ -18,27 +18,32 @@ class ConfigProvider
      * method which returns an array with its configuration.
      *
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
+            'templates' => $this->getTemplates(),
         ];
     }
 
     /**
      * Returns the container dependencies
      */
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return [
             'invokables' => [
             ],
-            'factories'  => [
+            'factories' => [
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\AuthenticationHandler::class => Handler\AuthenticationHandlerFactory::class,
+
                 Models\UserRepository::class => Models\UserRepositoryFactory::class,
+                Models\RegisterApplicationRepository::class => Models\RegisterApplicationRepositoryFactory::class,
+
                 Helpers\Authentication::class => Helpers\AuthenticationFactory::class,
+
+                Services\UserRegistration::class => Services\UserRegistrationFactory::class,
             ],
         ];
     }
@@ -46,12 +51,12 @@ class ConfigProvider
     /**
      * Returns the templates configuration
      */
-    public function getTemplates() : array
+    public function getTemplates(): array
     {
         return [
             'paths' => [
-                'app'    => [__DIR__ . '/Templates/app'],
-                'error'  => [__DIR__ . '/Templates/error'],
+                'app' => [__DIR__ . '/Templates/app'],
+                'error' => [__DIR__ . '/Templates/error'],
                 'layout' => [__DIR__ . '/Templates/layout'],
             ],
         ];

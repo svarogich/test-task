@@ -9,10 +9,9 @@ $(function () {
             data: 'email=' + email,
             success: (data) => {
                 if (true === data.canBeUsed) {
-                    return true;
+                    $form[0].submit();
                 } else {
                     alert('This email already in use');
-                    return false;
                 }
             },
             dataType: 'json'

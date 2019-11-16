@@ -10,7 +10,8 @@
             "ext-curl": "0",
             "ext-json": "0",
             "ext-pdo": "0",
-            "ext-dom": "0"
+            "ext-dom": "0",
+            "ext-openssl": "0"
         }
     },
     "require": {
@@ -18,6 +19,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-pdo": "*",
+        "ext-openssl": "*",
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-db": "^2.9",
         "zendframework/zend-diactoros": "^1.7.1",
@@ -30,7 +32,8 @@
         "zendframework/zend-stdlib": "^3.1",
         "zendframework/zend-expressive-twigrenderer": "^2.0",
         "zendframework/zend-expressive-authentication-session": "^1.0",
-        "zendframework/zend-expressive-session-ext": "^1.6"
+        "zendframework/zend-expressive-session-ext": "^1.6",
+        "zendframework/zend-mail": "^2.10"
     },
     "require-dev": {
         "filp/whoops": "^2.2"

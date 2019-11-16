@@ -1,0 +1,14 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Registration</div>
+            <div class="card-body">
+                <p>Registration complete, please use link to login ({{ email }}): <a href="{{ path('get.login') }}">{{ path('get.login') }}</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

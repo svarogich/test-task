@@ -1,0 +1,14 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Email Verification{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Registration</div>
+            <div class="card-body">
+                <p>Verification mail has been send ({{ email }}), please verify it to continue</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

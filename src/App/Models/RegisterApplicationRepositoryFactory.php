@@ -5,16 +5,16 @@ namespace App\Models;
 use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\Adapter;
 
-class UserRepositoryFactory
+class RegisterApplicationRepositoryFactory
 {
     /**
      * @param ContainerInterface $container
-     * @return UserRepository
+     * @return RegisterApplicationRepository
      */
-    public function __invoke(ContainerInterface $container): UserRepository
+    public function __invoke(ContainerInterface $container): RegisterApplicationRepository
     {
         $db = $container->get(Adapter::class);
 
-        return new UserRepository($db);
+        return new RegisterApplicationRepository($db);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Helpers\PasswordHelper;
+use App\InputFilters\ClientInputFilter;
 use Zend\Db\Adapter\Adapter;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
@@ -18,6 +20,11 @@ class UserRepository implements UserRepositoryInterface
         $this->adapter = $adapter;
     }
 
+    /**
+     * @param string $credential
+     * @param string|null $password
+     * @return UserInterface|null
+     */
     public function authenticate(string $credential, string $password = null): ?UserInterface
     {
         $result = $this->adapter->query('SELECT * FROM user WHERE email = :email',
@@ -43,16 +50,20 @@ class UserRepository implements UserRepositoryInterface
         $row = $rowObject->getArrayCopy();
 
         if (password_verify($password ?? '', $row['password'])) {
-            return $this->createUser($row);
+            return $this->createObject($row);
         }
         return null;
     }
 
-    public function findByEmail(string $login): ?User
+    /**
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
     {
         $result = $this->adapter->query('SELECT * FROM user WHERE email = :email',
             [
-                'email' => $login
+                'email' => $email
             ]
         );
 
@@ -72,9 +83,13 @@ class UserRepository implements UserRepositoryInterface
         }
         $row = $rowObject->getArrayCopy();
 
-        return $this->createUser($row);
+        return $this->createObject($row);
     }
 
+    /**
+     * @param int $id
+     * @return User|null
+     */
     public function findById(int $id): ?User
     {
         $result = $this->adapter->query('SELECT * FROM user WHERE id = :id',
@@ -99,53 +114,39 @@ class UserRepository implements UserRepositoryInterface
         }
         $row = $rowObject->getArrayCopy();
 
-        return $this->createUser($row);
+        return $this->createObject($row);
     }
 
     /**
-     * @param User $user
-     * @return bool
+     * @param RegisterApplication $application
+     * @param string $password
+     * @return User
      */
-    public function update(User $user): bool
+    public function createUserFromApplication(RegisterApplication $application, string $password): User
     {
-        if (!empty($user->getPassword())) {
-            $result = $this->adapter->query(
-                'UPDATE user set 
-name = :name,
-active = :active
-WHERE id = :id',
-                [
-                    'name' => $user->getName(),
-                    'password' => $user->getPassword(),
-                    'active' => $user->isActive(),
-                    'id' => $user->getId(),
-                ]);
-        } else {
-            $result = $this->adapter->query(
-                'UPDATE user set 
-name = :name,
-active = :active
-WHERE id = :id',
-                [
-                    'name' => $user->getName(),
-                    'active' => $user->isActive(),
-                    'id' => $user->getId(),
-                ]);
-        }
+        $this->adapter->query(
+            'INSERT INTO user (`email`, `name`, `password`) 
+VALUES (:email, :name, :password)',
+            [
+                'email' => $application->getEmail(),
+                'name' => $application->getEmail(),
+                'password' => PasswordHelper::getHash($password),
+            ]);
 
-        $user->setPassword(null);
-
-        return $result->count() === 1 ? true : false;
-
+        //TODO check for null
+        return $this->findById((int)$this->adapter->getDriver()->getLastGeneratedValue());
     }
 
-    private function createUser(array $row): User
+    /**
+     * @param array $row
+     * @return User
+     */
+    private function createObject(array $row): User
     {
         return new User(
             (int)$row['id'],
             $row['email'],
-            $row['name'],
-            filter_var($row['active'], FILTER_VALIDATE_BOOLEAN)
+            $row['name']
         );
     }
 }

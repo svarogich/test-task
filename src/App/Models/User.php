@@ -6,7 +6,7 @@ use Zend\Expressive\Authentication\UserInterface;
 
 class User implements UserInterface
 {
-    /** @var int */
+    /** @var int|null */
     private $id;
 
     /** @var string */
@@ -18,21 +18,17 @@ class User implements UserInterface
     /** @var string|null */
     private $password;
 
-    /** @var bool */
-    private $active;
-
-    public function __construct(int $id, string $email, string $name, bool $active)
+    public function __construct(?int $id, string $email, string $name)
     {
         $this->id = $id;
         $this->email = $email;
         $this->name = $name;
-        $this->active = $active;
     }
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -117,21 +113,5 @@ class User implements UserInterface
     public function getPassword(): ?string
     {
         return $this->password;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     */
-    public function setActive(bool $active): void
-    {
-        $this->active = $active;
     }
 }
