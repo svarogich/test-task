@@ -1,0 +1,28 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Registration</div>
+            <div class="card-body">
+                <form method="post">
+                    <input name="token" type="hidden" value="{{ token }}">
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input class="form-control" placeholder="Password"
+                                   name="password" required="required">
+                            Password
+                        </div>
+                    </div>
+                  <div class="alert-danger">
+                    <p>{{ error }}</p>
+                  </div>
+                    <input type="submit" class="btn btn-primary btn-block" value="Register me" />
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

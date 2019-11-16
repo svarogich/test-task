@@ -9,4 +9,16 @@
 declare(strict_types=1);
 
 return [
+    'authentication' => [
+        'redirect' => '/login',
+        'non_authenticated_routes' => [
+            'get.login',
+            'post.login',
+            'get.registration',
+            'post.registration',
+            'get.pre-registration',
+            'post.pre-registration',
+            'post.check-email',
+        ]
+    ],
 ];
