@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Models\UserRepository;
+use App\Services\RssReader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -22,21 +23,34 @@ class HomePageHandler implements RequestHandlerInterface
 
     /** @var UserRepository */
     private $userRepository;
+    /**
+     * @var RssReader
+     */
+    private $rssReader;
 
+    /**
+     * HomePageHandler constructor.
+     * @param Router\RouterInterface $router
+     * @param TemplateRendererInterface $template
+     * @param UserRepository $userRepository
+     * @param RssReader $rssReader
+     */
     public function __construct(
         Router\RouterInterface $router,
         TemplateRendererInterface $template,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        RssReader $rssReader
     )
     {
         $this->template = $template;
         $this->router = $router;
         $this->userRepository = $userRepository;
+        $this->rssReader = $rssReader;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $data = [];
-        return new HtmlResponse($this->template->render('app::home-page', $data));
+        $news = $this->rssReader->getLastFive();
+        return new HtmlResponse($this->template->render('app::home-page', ['news' => $news]));
     }
 }

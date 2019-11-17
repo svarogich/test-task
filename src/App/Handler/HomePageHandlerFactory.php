@@ -2,8 +2,8 @@
 
 namespace App\Handler;
 
-use App\Helpers\TemplateRenderer;
 use App\Models\UserRepository;
+use App\Services\RssReader;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Router\RouterInterface;
@@ -16,7 +16,8 @@ class HomePageHandlerFactory
         return new HomePageHandler(
             $container->get(RouterInterface::class),
             $container->get(TemplateRendererInterface::class),
-            $container->get(UserRepository::class)
+            $container->get(UserRepository::class),
+            $container->get(RssReader::class)
         );
     }
 }

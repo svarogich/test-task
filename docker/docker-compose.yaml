@@ -33,7 +33,7 @@ services:
       SMTP_PORT: 1025
       SMTP_USER: ""
       SMTP_PASSWORD: ""
-      NEWS_RSS: https://www:tvnet:lv/rss/
+      NEWS_RSS: https://www.tvnet.lv/rss/
     links:
       - mysql
       - smtp

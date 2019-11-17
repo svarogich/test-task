@@ -44,6 +44,7 @@ class ConfigProvider
                 Helpers\Authentication::class => Helpers\AuthenticationFactory::class,
 
                 Services\UserRegistration::class => Services\UserRegistrationFactory::class,
+                Services\RssReader::class => Services\RssReaderFactory::class,
             ],
         ];
     }

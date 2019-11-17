@@ -18,8 +18,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 
 class AuthenticationHandler implements RequestHandlerInterface
 {
-    private const REDIRECT_ATTRIBUTE = 'authentication:redirect';
-
     /**
      * @var Router\RouterInterface
      */
@@ -100,30 +98,6 @@ class AuthenticationHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @param SessionInterface $session
-     * @return string
-     */
-    private function getRedirect(ServerRequestInterface $request, SessionInterface $session): string
-    {
-        $redirect = $session->get(self::REDIRECT_ATTRIBUTE);
-
-        if (!$redirect) {
-            $redirect = $request->getHeaderLine('Referer');
-        }
-
-        if (
-            in_array($redirect, ['', '/login'], true)
-            || substr($redirect, -6) === '/login'
-        ) {
-            $redirect = '/';
-        }
-
-
-        return $redirect;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param SessionInterface $session
      * @param string $redirect
      * @return ResponseInterface
      */
@@ -136,7 +110,6 @@ class AuthenticationHandler implements RequestHandlerInterface
 
         // Login was successful
         if ($this->adapter->authenticate($request)) {
-            $session->unset(self::REDIRECT_ATTRIBUTE);
             return new RedirectResponse($redirect);
         }
 
@@ -153,17 +126,13 @@ class AuthenticationHandler implements RequestHandlerInterface
      */
     private function handleGetLogin(ServerRequestInterface $request)
     {
-        $session = $request->getAttribute('session');
-        $redirect = $this->getRedirect($request, $session);
-
         // Redirect to main if already has auth
         $user = $request->getAttribute(UserInterface::class);
         if ($user instanceof UserInterface) {
-            return new RedirectResponse($redirect);
+            return new RedirectResponse('/');
         }
 
         // Display initial login form
-        $session->set(self::REDIRECT_ATTRIBUTE, $redirect);
         return new HtmlResponse($this->template->render(
             'app::login',
             []
@@ -177,16 +146,14 @@ class AuthenticationHandler implements RequestHandlerInterface
     private function handlePostLogin(ServerRequestInterface $request)
     {
         $session = $request->getAttribute('session');
-        $redirect = $this->getRedirect($request, $session);
-
 
         // Redirect to main if already has auth
         $user = $request->getAttribute(UserInterface::class);
         if ($user instanceof UserInterface) {
-            return new RedirectResponse($redirect);
+            return new RedirectResponse('/');
         }
 
-        return $this->handleLoginAttempt($request, $session, $redirect);
+        return $this->handleLoginAttempt($request, $session, '/');
     }
 
     private function handleGetRegistration(ServerRequestInterface $request)

@@ -3,5 +3,23 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    Home page
+
+    <h1>News</h1>
+
+    {% for newsEntity in news %}
+        <h2>{{ newsEntity.getTitle() }}</h2>
+        <div class="row">
+
+            <div style="float: left;width: 500px">
+                <img src="{{ newsEntity.getImageUrl() }}"/>
+            </div>
+            <div>
+                <p>{{ newsEntity.getDescription() }}</p>
+                <p><a href="{{ newsEntity.getUri() }}" target="_blank">{{ newsEntity.getUri() }}</a></p>
+            </div>
+
+        </div>
+
+        <hr style="clear: both;"/>
+    {% endfor %}
 {% endblock %}
