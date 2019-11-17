@@ -156,6 +156,10 @@ class AuthenticationHandler implements RequestHandlerInterface
         return $this->handleLoginAttempt($request, $session, '/');
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return HtmlResponse
+     */
     private function handleGetRegistration(ServerRequestInterface $request)
     {
         // TODO refactor with InputFilter
@@ -171,6 +175,10 @@ class AuthenticationHandler implements RequestHandlerInterface
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return HtmlResponse
+     */
     private function handleGetPreRegistration(ServerRequestInterface $request)
     {
         return new HtmlResponse($this->template->render(
@@ -189,6 +197,10 @@ class AuthenticationHandler implements RequestHandlerInterface
         return new JsonResponse(['canBeUsed' => null === $user]);
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return HtmlResponse
+     */
     private function handlePostPreRegistration(ServerRequestInterface $request)
     {
         // TODO refactor with InputFilter / verify email is email
@@ -202,6 +214,10 @@ class AuthenticationHandler implements RequestHandlerInterface
         ));
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return HtmlResponse
+     */
     private function handlePostRegistration(ServerRequestInterface $request)
     {
         // TODO refactor with InputFilter / verify password is valid

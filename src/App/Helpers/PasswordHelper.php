@@ -14,14 +14,4 @@ class PasswordHelper
     {
         return password_hash($string, PASSWORD_ARGON2I);
     }
-
-    /**
-     * @param string $password
-     * @param string $hash
-     * @return bool
-     */
-    public static function verifyPassword(string $password, string $hash): bool
-    {
-        return password_verify($password, $hash);
-    }
 }

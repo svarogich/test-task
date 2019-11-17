@@ -48,6 +48,10 @@ class HomePageHandler implements RequestHandlerInterface
         $this->rssReader = $rssReader;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $news = $this->rssReader->getLastFive();

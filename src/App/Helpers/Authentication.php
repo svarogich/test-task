@@ -87,6 +87,10 @@ class Authentication implements AuthenticationInterface
         return $user;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
     {
         return ($this->responseFactory)()

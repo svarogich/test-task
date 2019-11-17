@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zend\ConfigAggregator\ArrayProvider;
 use Zend\ConfigAggregator\ConfigAggregator;
 use Zend\ConfigAggregator\PhpFileProvider;
+use Zend\Expressive\Authentication\Session\ConfigProvider;
 
 // To enable or disable caching, set the `ConfigAggregator::ENABLE_CACHE` boolean in
 // `config/autoload/local.php`.
@@ -28,7 +29,7 @@ $aggregator = new ConfigAggregator([
     \Zend\Expressive\Session\Ext\ConfigProvider::class,
     \Zend\Expressive\Session\ConfigProvider::class,
     \Zend\Expressive\Authentication\ConfigProvider::class,
-    \Zend\Expressive\Authentication\Session\ConfigProvider::class,
+    ConfigProvider::class,
 
     // Default App module config
     App\ConfigProvider::class,
